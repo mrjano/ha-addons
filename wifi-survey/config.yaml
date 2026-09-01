@@ -1,0 +1,35 @@
+# wifi-survey: escaneo PASIVO de la radio de la Pi -> sensores MQTT por AP.
+#
+# Diseño clave: NO se asocia a ninguna red. `iw scan` solo escucha beacons, así
+# que eth0 sigue siendo la única ruta y el hub domótico no depende del WiFi.
+# En DFS (ch 100/104) el escaneo pasivo es además el único legal: no se puede
+# sondear activamente hasta oír un beacon.
+name: WiFi Survey
+version: "0.1.0"
+slug: wifi_survey
+description: Escaneo pasivo de wlan0 → RSSI/canal por AP vía MQTT discovery
+url: https://github.com/mrjano/ha-addons
+arch:
+  - aarch64
+init: false
+# host_network + NET_ADMIN/NET_RAW: sin esto iw no puede ni listar ni escanear.
+host_network: true
+privileged:
+  - NET_ADMIN
+  - NET_RAW
+# Credenciales del broker Mosquitto vía la service API de bashio.
+services:
+  - mqtt:need
+options:
+  home_ssid: ASUS_28
+  interface: wlan0
+  scan_interval: 120
+  # "bssid=nombre" para etiquetar los APs propios cuando se conozcan sus BSSID,
+  # p.ej. "a0:36:bc:xx:xx:xx=despacho AX57". Sin etiqueta salen como "AP <sufijo>".
+  ap_names: []
+schema:
+  home_ssid: str
+  interface: str
+  scan_interval: int(30,3600)
+  ap_names:
+    - str
