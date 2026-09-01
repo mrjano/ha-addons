@@ -1,0 +1,4 @@
+# Sin este fichero el Supervisor NO pasa BUILD_FROM al docker build
+# (sí pasa BUILD_VERSION/BUILD_ARCH) y el FROM queda vacío: build roto.
+build_from:
+  aarch64: ghcr.io/home-assistant/aarch64-base:3.21
