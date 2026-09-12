@@ -2,8 +2,21 @@
 # Puente entre la config del add-on / la service API y el script de Python.
 set -e
 
+# Mosquitto puede tardar en registrarse como proveedor del servicio mqtt. Al
+# restaurar el backup del 2026-09-12 este add-on arrancó a las 23:48 y Mosquitto
+# no quedó registrado hasta las 23:57: nueve minutos. Comprobarlo una sola vez y
+# morir con FATAL dejaba el add-on parado hasta que alguien lo levantara a mano,
+# y con él el survey del despacho. Así que esperamos.
+for intento in $(seq 1 60); do
+    if bashio::services.available mqtt; then
+        break
+    fi
+    bashio::log.warning "Aún no hay broker MQTT; reintento ${intento}/60 en 10 s."
+    sleep 10
+done
+
 if ! bashio::services.available mqtt; then
-    bashio::log.fatal "No hay broker MQTT. Instala el add-on Mosquitto primero."
+    bashio::log.fatal "10 minutos sin broker MQTT. ¿Está Mosquitto instalado y arrancado?"
     exit 1
 fi
 

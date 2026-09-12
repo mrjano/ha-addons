@@ -5,7 +5,7 @@
 # En DFS (ch 100/104) el escaneo pasivo es además el único legal: no se puede
 # sondear activamente hasta oír un beacon.
 name: WiFi Survey
-version: "0.1.0"
+version: "0.1.1"
 slug: wifi_survey
 description: Escaneo pasivo de wlan0 → RSSI/canal por AP vía MQTT discovery
 url: https://github.com/mrjano/ha-addons
